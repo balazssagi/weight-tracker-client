@@ -31,7 +31,7 @@ const WeightsTable: React.FC<Props> = props => {
     <>
       <Box mb={2}>
         <Paper>
-          <ResponsiveContainer width="100%" aspect={3}>
+          <ResponsiveContainer width="100%" aspect={2}>
             <AreaChart
               data={[...data]
                 .map(data => ({ ...data, weight: data.weight.toFixed(2) }))

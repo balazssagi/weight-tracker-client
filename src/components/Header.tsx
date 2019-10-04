@@ -33,7 +33,7 @@ export const Header = () => {
       </Toolbar>
       <Tabs
         className={classes.tabs}
-        indicatorColor="primary"
+        TabIndicatorProps={{ className: classes.tabIndicator }}
         value={selectedTabIndex}
         onChange={(_, value) => {
           uiDispatch({ type: 'SET_SELECTED_TAB', tab: value })
@@ -57,5 +57,10 @@ const useStyles = makeStyles(theme => ({
   },
   tabs: {
     background: theme.palette.primary.dark,
+  },
+  tabIndicator: {
+    background: theme.palette.primary.contrastText,
+    height: 3,
+    borderRadius: '5px 5px 0px 0px',
   },
 }))
