@@ -11,7 +11,7 @@ export const normalizeWeights = (weights: Weight[], time: Period) => {
 
       let calculated = ''
       if (time === 'daily') {
-        calculated = newDate.format('MMMM Do')
+        calculated = newDate.format('MM. DD.')
       } else if (time === 'weekly') {
         calculated = newDate.isoWeek().toString()
       } else if (time === 'monthly') {

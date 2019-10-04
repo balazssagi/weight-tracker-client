@@ -34,17 +34,22 @@ const WeightsTable: React.FC<Props> = props => {
           data={[...data]
             .map(data => ({ ...data, weight: data.weight.toFixed(2) }))
             .reverse()}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          margin={{ top: 5, bottom: 5 }}
         >
           {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis
             dataKey="date"
-            interval={0}
-            tick={period === 'daily' ? false : undefined}
+            tick={{ fill: theme.palette.primary.dark }}
+            // interval="preserveStartEnd"
+            // tick={period === 'daily' ? false : undefined}
           />
-          <YAxis domain={[60, 'dataMax']} />
+          <YAxis
+            domain={[60, 'dataMax']}
+            mirror
+            tick={{ fill: theme.palette.primary.dark }}
+          />
           <Area
-            dot={period === 'daily' ? false : true}
+            dot={false}
             isAnimationActive={false}
             type="linear"
             dataKey="weight"
