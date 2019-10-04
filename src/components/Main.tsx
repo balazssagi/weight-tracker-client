@@ -1,17 +1,28 @@
 import Box from '@material-ui/core/Box'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Paper from '@material-ui/core/Paper'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useDataState } from '../contexts/dataContext'
-import { useUiState } from '../contexts/uiContext'
+import { useUiState, useUiDispatch } from '../contexts/uiContext'
 import { normalizeWeights } from '../helpers/calculations'
 import { WeightsTable } from './WeightsTable'
 import { makeStyles } from '@material-ui/core'
+import SwipeableViews from 'react-swipeable-views'
+import { Period } from '../types'
 
 export const Main = () => {
   const { selectedTab } = useUiState()
+  const uiDispatch = useUiDispatch()
   const { loading, error, data } = useDataState()
   const classes = useStyles()
+
+  const normalizedData1 = useMemo(() => normalizeWeights(data, 'weekly'), [
+    data,
+  ])
+  const normalizedData2 = useMemo(() => normalizeWeights(data, 'monthly'), [
+    data,
+  ])
+  const normalizedData3 = useMemo(() => normalizeWeights(data, 'daily'), [data])
 
   if (loading) {
     return <LinearProgress />
@@ -21,15 +32,43 @@ export const Main = () => {
     return null
   }
 
-  const normalizedData = normalizeWeights(data, selectedTab)
+  const dict: Record<Period, number> = {
+    weekly: 0,
+    monthly: 1,
+    daily: 2,
+  }
+
+  const dict2: Record<number, Period> = {
+    0: 'weekly',
+    1: 'monthly',
+    2: 'daily',
+  }
 
   return (
     <main>
-      <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
-        <Paper className={classes.paper}>
-          <WeightsTable data={normalizedData} period={selectedTab} />
-        </Paper>
-      </Box>
+      <SwipeableViews
+        containerStyle={{ height: 'calc(100vh - 104px)' }}
+        index={dict[selectedTab]}
+        onChangeIndex={index => {
+          uiDispatch({ type: 'SET_SELECTED_TAB', tab: dict2[index] })
+        }}
+      >
+        <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
+          <Paper className={classes.paper}>
+            <WeightsTable data={normalizedData1} period={'weekly'} />
+          </Paper>
+        </Box>
+        <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
+          <Paper className={classes.paper}>
+            <WeightsTable data={normalizedData2} period={'monthly'} />
+          </Paper>
+        </Box>
+        <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
+          <Paper className={classes.paper}>
+            <WeightsTable data={normalizedData3} period={'daily'} />
+          </Paper>
+        </Box>
+      </SwipeableViews>
     </main>
   )
 }
