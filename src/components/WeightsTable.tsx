@@ -3,7 +3,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Paper, Box } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
 import React from 'react'
 import { Period, Weight } from '../types'
@@ -29,68 +29,74 @@ const WeightsTable: React.FC<Props> = props => {
 
   return (
     <>
-      <ResponsiveContainer width="100%" aspect={3}>
-        <AreaChart
-          data={[...data]
-            .map(data => ({ ...data, weight: data.weight.toFixed(2) }))
-            .reverse()}
-          margin={{ top: 5, bottom: 5 }}
-        >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
-          <XAxis
-            dataKey="date"
-            tick={{ fill: theme.palette.primary.dark }}
-            // interval="preserveStartEnd"
-            // tick={period === 'daily' ? false : undefined}
-          />
-          <YAxis
-            domain={[60, 'dataMax']}
-            mirror
-            tick={{ fill: theme.palette.primary.dark }}
-          />
-          <Area
-            dot={false}
-            isAnimationActive={false}
-            type="linear"
-            dataKey="weight"
-            stroke={theme.palette.primary.main}
-            fill={theme.palette.primary.light}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>{dict[period]}</TableCell>
-            <TableCell align="right">Weight&nbsp;(kg)</TableCell>
-            <TableCell align="right">Delta&nbsp;(kg)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((entry, i) => {
-            const diff = data[i + 1] ? entry.weight - data[i + 1].weight : 0
+      <Box mb={2}>
+        <Paper>
+          <ResponsiveContainer width="100%" aspect={3}>
+            <AreaChart
+              data={[...data]
+                .map(data => ({ ...data, weight: data.weight.toFixed(2) }))
+                .reverse()}
+              margin={{ top: 5, bottom: 5 }}
+            >
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tick={{ fill: theme.palette.primary.dark }}
+              />
+              <YAxis
+                domain={[60, 'dataMax']}
+                mirror
+                tickLine={false}
+                axisLine={false}
+                tick={{ fill: theme.palette.primary.dark }}
+              />
+              <Area
+                dot={false}
+                isAnimationActive={false}
+                dataKey="weight"
+                stroke={theme.palette.primary.main}
+                fill={theme.palette.primary.light}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </Paper>
+      </Box>
+      <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{dict[period]}</TableCell>
+              <TableCell align="right">Weight&nbsp;(kg)</TableCell>
+              <TableCell align="right">Delta&nbsp;(kg)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((entry, i) => {
+              const diff = data[i + 1] ? entry.weight - data[i + 1].weight : 0
 
-            return (
-              <TableRow
-                key={i}
-                className={i % 2 === 0 ? classes.zebraRow : undefined}
-              >
-                <TableCell component="th" scope="row">
-                  {entry.date}
-                </TableCell>
-                <TableCell align="right">
-                  <strong>{entry.weight.toFixed(2)}</strong>
-                </TableCell>
-                <TableCell align="right">
-                  {diff > 0 && <span className={classes.positive}>▲ </span>}
-                  {diff < 0 && <span className={classes.negative}>▼ </span>}
-                  {Math.abs(diff).toFixed(2)}
-                </TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
+              return (
+                <TableRow
+                  key={i}
+                  className={i % 2 === 0 ? classes.zebraRow : undefined}
+                >
+                  <TableCell component="th" scope="row">
+                    {entry.date}
+                  </TableCell>
+                  <TableCell align="right">
+                    <strong>{entry.weight.toFixed(2)}</strong>
+                  </TableCell>
+                  <TableCell align="right">
+                    {diff > 0 && <span className={classes.positive}>▲ </span>}
+                    {diff < 0 && <span className={classes.negative}>▼ </span>}
+                    {Math.abs(diff).toFixed(2)}
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
     </>
   )
 }

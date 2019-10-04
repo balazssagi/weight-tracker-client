@@ -14,7 +14,6 @@ export const Main = () => {
   const { selectedTab } = useUiState()
   const uiDispatch = useUiDispatch()
   const { loading, error, data } = useDataState()
-  const classes = useStyles()
 
   const normalizedData1 = useMemo(() => normalizeWeights(data, 'weekly'), [
     data,
@@ -54,27 +53,15 @@ export const Main = () => {
         }}
       >
         <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
-          <Paper className={classes.paper}>
-            <WeightsTable data={normalizedData1} period={'weekly'} />
-          </Paper>
+          <WeightsTable data={normalizedData1} period={'weekly'} />
         </Box>
         <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
-          <Paper className={classes.paper}>
-            <WeightsTable data={normalizedData2} period={'monthly'} />
-          </Paper>
+          <WeightsTable data={normalizedData2} period={'monthly'} />
         </Box>
         <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
-          <Paper className={classes.paper}>
-            <WeightsTable data={normalizedData3} period={'daily'} />
-          </Paper>
+          <WeightsTable data={normalizedData3} period={'daily'} />
         </Box>
       </SwipeableViews>
     </main>
   )
 }
-
-const useStyles = makeStyles({
-  paper: {
-    overflowX: 'auto',
-  },
-})
