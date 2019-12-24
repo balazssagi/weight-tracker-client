@@ -3,9 +3,9 @@ import { Weight } from './types'
 
 const axiosInstance = Axios.create({ baseURL: process.env.REACT_APP_API_URL })
 
-export const getWeights = async () => {
+export const getWeights = async (year: number) => {
   const res = await axiosInstance.get<Weight[]>('weights', {
-    params: { secret: localStorage.getItem('secret') },
+    params: { secret: localStorage.getItem('secret'), year },
   })
   return res.data
 }

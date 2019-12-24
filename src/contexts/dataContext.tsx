@@ -7,17 +7,20 @@ interface State {
   data: Weight[]
   loading: boolean
   error: boolean
+  year: number
 }
 
 type Action =
   | { type: 'SET_DATA'; data: Weight[] }
   | { type: 'ADD_DATA'; data: Weight }
+  | { type: 'SET_YEAR'; year: number }
   | { type: 'DATA_FETCH_ERROR' }
 
 const initialState: State = {
   data: [],
   loading: true,
   error: false,
+  year: new Date().getFullYear(),
 }
 
 const dataReducer: Reducer<State, Action> = (state, action) => {
@@ -35,6 +38,12 @@ const dataReducer: Reducer<State, Action> = (state, action) => {
         data: [action.data, ...state.data],
         loading: false,
       }
+    case 'SET_YEAR':
+      return {
+        ...state,
+        loading: true,
+        year: action.year,
+      }
     case 'DATA_FETCH_ERROR':
       return {
         ...state,
@@ -51,19 +60,26 @@ const DataDispatchContext = React.createContext<
 
 export const DataContextProvider: React.FC = props => {
   const [dataState, setDataState] = React.useReducer(dataReducer, initialState)
+  const { year } = dataState
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
+    let ignore = false
     const getData = async () => {
       try {
-        const weights = await getWeights()
+        const weights = await getWeights(year)
+        if (ignore) return
         setDataState({ type: 'SET_DATA', data: weights })
       } catch (e) {
+        if (ignore) return
         setDataState({ type: 'DATA_FETCH_ERROR' })
       }
     }
     getData()
-  }, [enqueueSnackbar])
+    return () => {
+      ignore = true
+    }
+  }, [enqueueSnackbar, year])
 
   useEffect(() => {
     if (dataState.error === true) {
