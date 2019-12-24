@@ -90,6 +90,13 @@ const YearSelect = () => {
       >
         <MenuItem
           onClick={() => {
+            setYear(2018)
+          }}
+        >
+          2018
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
             setYear(2019)
           }}
         >
