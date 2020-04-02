@@ -1,7 +1,7 @@
 import { Period, Weight } from '../types'
 import moment from 'moment'
 
-const averageOfArray = (arr: number[]) =>
+export const averageOfArray = (arr: number[]) =>
   arr.reduce((acc, current) => acc + current, 0) / arr.length
 
 export const normalizeWeights = (weights: Weight[], time: Period) => {

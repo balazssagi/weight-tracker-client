@@ -16,6 +16,7 @@ interface Props {
 
 const dict: Record<Period, string> = {
   daily: 'Day',
+  moving: 'Period',
   weekly: 'Week',
   monthly: 'Month',
 }

@@ -4,4 +4,4 @@ export interface Weight {
   deviation?: number
 }
 
-export type Period = 'daily' | 'weekly' | 'monthly'
+export type Period = 'daily' | 'weekly' | 'monthly' | 'moving'

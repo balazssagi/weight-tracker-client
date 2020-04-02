@@ -1,6 +1,6 @@
 import React, { Reducer } from 'react'
 
-type Tab = 'weekly' | 'monthly' | 'daily'
+type Tab = 'weekly' | 'moving' | 'monthly' | 'daily'
 type Dialog = 'new-weight' | 'secret' | null
 
 interface State {

@@ -43,6 +43,7 @@ export const Header = () => {
         }}
       >
         <Tab color="#00ff00" label="Weekly" value="weekly" />
+        <Tab label="Moving" value="moving" />
         <Tab label="Monthly" value="monthly" />
         <Tab label="Daily" value="daily" />
       </Tabs>

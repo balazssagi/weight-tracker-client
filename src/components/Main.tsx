@@ -4,11 +4,12 @@ import Paper from '@material-ui/core/Paper'
 import React, { useMemo } from 'react'
 import { useDataState } from '../contexts/dataContext'
 import { useUiState, useUiDispatch } from '../contexts/uiContext'
-import { normalizeWeights } from '../helpers/calculations'
+import { normalizeWeights, averageOfArray } from '../helpers/calculations'
 import { WeightsTable } from './WeightsTable'
 import { makeStyles } from '@material-ui/core'
 import SwipeableViews from 'react-swipeable-views'
 import { Period } from '../types'
+import moment from 'moment'
 
 export const Main = () => {
   const { selectedTab } = useUiState()
@@ -23,6 +24,30 @@ export const Main = () => {
   ])
   const normalizedData3 = useMemo(() => normalizeWeights(data, 'daily'), [data])
 
+  const movingAverage = useMemo(() => {
+    const result = []
+    if (data.length === 0) {
+      return []
+    }
+    const DAYS = 7
+    let i = 0
+    while (true) {
+      if (i > data.length - 1) {
+        break
+      }
+      const firstDate = moment(data[i].date)
+      const lastDate = moment(data[i].date).subtract(DAYS, 'days')
+      const we = data.filter(d => moment(d.date).isBetween(lastDate, firstDate))
+      const average = averageOfArray(we.map(w => w.weight))
+      result.push({
+        date: `${firstDate.format('MM. DD.')} – ${lastDate.format('MM. DD.')}`,
+        weight: average,
+      })
+      i = i + DAYS + 1
+    }
+    return result
+  }, [data])
+
   if (loading) {
     return <LinearProgress />
   }
@@ -33,14 +58,16 @@ export const Main = () => {
 
   const dict: Record<Period, number> = {
     weekly: 0,
-    monthly: 1,
-    daily: 2,
+    moving: 1,
+    monthly: 2,
+    daily: 3,
   }
 
   const dict2: Record<number, Period> = {
     0: 'weekly',
-    1: 'monthly',
-    2: 'daily',
+    1: 'moving',
+    2: 'monthly',
+    3: 'daily',
   }
 
   return (
@@ -54,6 +81,9 @@ export const Main = () => {
       >
         <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
           <WeightsTable data={normalizedData1} period={'weekly'} />
+        </Box>
+        <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
+          <WeightsTable data={movingAverage} period={'weekly'} />
         </Box>
         <Box p={2} maxWidth={800} marginLeft="auto" marginRight="auto">
           <WeightsTable data={normalizedData2} period={'monthly'} />
